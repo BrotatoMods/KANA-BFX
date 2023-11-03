@@ -17,7 +17,7 @@ func _ready() -> void:
 
 	KANA_add_timespan_timer()
 
-	if RunData.effects["kana_bfx_spawn_consumable_random_position"]:
+	if not RunData.effects["kana_bfx_spawn_consumable_random_position"].empty():
 		for consumabel_to_spawn in RunData.effects["kana_bfx_spawn_consumable_random_position"]:
 			var key: String = consumabel_to_spawn[0]
 			var value: int = consumabel_to_spawn[1]
