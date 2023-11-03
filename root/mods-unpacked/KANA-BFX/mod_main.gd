@@ -8,6 +8,25 @@ var mod_dir_path := ""
 var extensions_dir_path := ""
 var translations_dir_path := ""
 
+var walking_turrets_debug_point: PackedScene = preload("res://mods-unpacked/KANA-BFX/content/walking_turrets/debug_point.tscn")
+var walking_turrets_debug_points: Node
+var boost_timer: Timer
+
+var state := {
+	"walking_turrets": {
+		"turrets": [],
+		"debug_points": [],
+		"boost_active": false,
+	},
+	"spawn_consumable": {},
+}
+
+var settings := {
+	"walking_turrets": {
+		"show_debug_points": false,
+	},
+}
+
 
 func _init(modLoader = ModLoader) -> void:
 	mod_dir_path = ModLoaderMod.get_unpacked_dir().plus_file(KANA_BFX_DIR)
@@ -22,6 +41,8 @@ func install_script_extensions() -> void:
 	ModLoaderMod.install_script_extension(extensions_dir_path.plus_file("main.gd"))
 	ModLoaderMod.install_script_extension(extensions_dir_path.plus_file("singletons/run_data.gd"))
 	ModLoaderMod.install_script_extension(extensions_dir_path.plus_file("entities/units/player/player.gd"))
+	ModLoaderMod.install_script_extension(extensions_dir_path.plus_file("entities/structures/turret/turret.gd"))
+	ModLoaderMod.install_script_extension(extensions_dir_path.plus_file("entities/units/movement_behaviors/player_movement_behavior.gd"))
 
 
 
@@ -32,6 +53,21 @@ func add_translations() -> void:
 
 
 func _ready() -> void:
-	pass
+	boost_timer = Timer.new()
+	boost_timer.one_shot = true
+	add_child(boost_timer)
+	boost_timer.connect("timeout", self, "_on_boost_timer_timeout")
 
 
+func KANA_activate_walking_turret_boost(seconds: int) -> void:
+	if not state.walking_turrets.boost_active:
+		state.walking_turrets.boost_active = true
+
+		if boost_timer.is_stopped():
+			boost_timer.start(seconds)
+	else:
+		boost_timer.start(seconds)
+
+
+func _on_boost_timer_timeout() -> void:
+	state.walking_turrets.boost_active = false

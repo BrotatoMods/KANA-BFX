@@ -1,0 +1,16 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+
+[deps]
+
+files=[ "res://mods-unpacked/KANA-BFX/translations/translation.en.translation", "res://mods-unpacked/KANA-BFX/translations/translation.de.translation" ]
+
+source_file="res://mods-unpacked/KANA-BFX/translations/translation.csv"
+dest_files=[ "res://mods-unpacked/KANA-BFX/translations/translation.en.translation", "res://mods-unpacked/KANA-BFX/translations/translation.de.translation" ]
+
+[params]
+
+compress=true
+delimiter=0

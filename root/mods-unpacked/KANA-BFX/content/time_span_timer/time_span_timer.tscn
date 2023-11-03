@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://mods-unpacked/KANA-BFX/content/time_span_timer/time_span_timer.gd" type="Script" id=1]
+
+[node name="TimeSpanTimer" type="Node"]
+script = ExtResource( 1 )

@@ -21,6 +21,17 @@ func _KANA_bfx_add_custom_effects(vanilla_effects:Dictionary) -> Dictionary:
 		"kana_bfx_gain_temp_stat_for_item_box_collected": [],
 		"kana_bfx_port_to_opposite_side": 0,
 		"kana_bfx_take_damage_on_turret_collision": 0,
+		"kana_bfx_turret_follow_player": 0,
+		"kana_bfx_turret_collide_with_player": 0,
+		"kana_bfx_cant_stop_moving": 0,
+		"kana_bfx_move_four_ways": 0,
+		"kana_bfx_spawn_consumable_random_position": [],
+		"kana_bfx_clear_consumable_on_wave_end": [],
+		"kana_bfx_consumable_turrets": [],
+		# Currently only on consumable collected
+		"kana_bfx_temp_stat_for_time_amount": [],
+		# Currently only on consumable collected
+		"kana_bfx_temp_effect_for_time_amount": [],
 	}
 
 	return Utils.merge_dictionaries(vanilla_effects, custom_effects)

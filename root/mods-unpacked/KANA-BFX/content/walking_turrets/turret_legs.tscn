@@ -1,0 +1,31 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://mods-unpacked/KANA-TrainConductor/custom_resources/train_conductor_turret_legs.png" type="Texture" id=1]
+
+[node name="Legs" type="Node2D"]
+position = Vector2( 0, 34 )
+
+[node name="LegL" type="Node2D" parent="."]
+position = Vector2( -15, -15 )
+rotation = 0.436332
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sprite" type="Sprite" parent="LegL"]
+position = Vector2( -2, 13 )
+texture = ExtResource( 1 )
+hframes = 2
+
+[node name="LegR" type="Node2D" parent="."]
+position = Vector2( 14, -16 )
+rotation = -0.436332
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sprite" type="Sprite" parent="LegR"]
+position = Vector2( 1, 15 )
+texture = ExtResource( 1 )
+hframes = 2
+frame = 1
