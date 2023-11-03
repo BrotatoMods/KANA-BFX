@@ -5,30 +5,32 @@ var kana_last_movement: Vector2
 
 
 func get_movement():
-	var movement = .get_movement()
+	var kana_movement = .get_movement()
 
 	if RunData.effects["kana_bfx_move_four_ways"]:
+		kana_movement = Vector2.ZERO
+
 		if Input.is_action_pressed('ui_right'):
-			movement = Vector2(1, 0)
+			kana_movement = Vector2(1, 0)
 		elif Input.is_action_pressed('ui_left'):
-			movement = Vector2(-1, 0)
+			kana_movement = Vector2(-1, 0)
 		elif Input.is_action_pressed('ui_down'):
-			movement = Vector2(0, 1)
+			kana_movement = Vector2(0, 1)
 		elif Input.is_action_pressed('ui_up'):
-			movement = Vector2(0, -1)
+			kana_movement = Vector2(0, -1)
 
-	if RunData.effects["kana_bfx_cant_stop_moving"] and RunData.effects["kana_bfx_move_four_ways"] and movement == Vector2.ZERO:
+	if RunData.effects["kana_bfx_cant_stop_moving"] and RunData.effects["kana_bfx_move_four_ways"] and kana_movement == Vector2.ZERO:
 		if kana_last_movement == Vector2.ZERO:
-			movement = Vector2(1, 0)
+			kana_movement = Vector2(1, 0)
 		else :
-			movement = kana_last_movement
+			kana_movement = kana_last_movement
 
-	if RunData.effects["kana_bfx_cant_stop_moving"] and movement == Vector2.ZERO:
+	if RunData.effects["kana_bfx_cant_stop_moving"] and kana_movement == Vector2.ZERO:
 		if kana_last_movement == Vector2.ZERO:
-			movement = Vector2(rand_range( - PI, PI), rand_range( - PI, PI))
+			kana_movement = Vector2(rand_range( - PI, PI), rand_range( - PI, PI))
 		else :
-			movement = kana_last_movement
+			kana_movement = kana_last_movement
 
-	kana_last_movement = movement
+	kana_last_movement = kana_movement
 
-	return movement
+	return kana_movement
