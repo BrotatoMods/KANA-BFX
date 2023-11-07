@@ -8,14 +8,19 @@ signal KANA_last_position_updated(last_position)
 var KANA_last_positions := []
 var KANA_last_positions_length := 0
 var KANA_wiggle_displacement := 15
+var KANA_turret_collided_iframe_timer: Timer
+var KANA_can_take_damage_from_turret := true
+var KANA_can_take_damage_from_turret_cooldown := 0.4
 
 onready var KANA_bfx := get_node("/root/ModLoader/KANA-BFX")
 
 
 func _ready() -> void:
+	KANA_add_turret_collided_iframe_timer()
 	KANA_update_last_positions_length()
 
 	connect("KANA_player_turret_collided", self, "_KANA_on_player_turret_collided")
+	KANA_turret_collided_iframe_timer.connect("timeout", self, "_KANA_on_turret_collided_iframe_timer_timeout")
 
 
 func _physics_process(delta: float) -> void:
@@ -27,6 +32,12 @@ func _physics_process(delta: float) -> void:
 
 	if RunData.effects["kana_bfx_turret_follow_player"]:
 		KANA_create_trailing_points()
+
+
+func KANA_add_turret_collided_iframe_timer() -> void:
+	KANA_turret_collided_iframe_timer = Timer.new()
+	KANA_turret_collided_iframe_timer.one_shot = true
+	add_child(KANA_turret_collided_iframe_timer)
 
 
 func KANA_update_last_positions_length():
@@ -43,7 +54,12 @@ func KANA_create_trailing_points() -> void:
 
 func _KANA_on_player_turret_collided(collision: KinematicCollision2D) -> void:
 	if RunData.effects["kana_bfx_take_damage_on_turret_collision"] == 1:
-		.take_damage(1)
+		if KANA_can_take_damage_from_turret:
+			var damage_base := 1
+			var damage: int = round(damage_base * ((RunData.current_wave * 0.25) * RunData.current_run_accessibility_settings.damage))
+			.take_damage(damage, null, false)
+			KANA_can_take_damage_from_turret = false
+			KANA_turret_collided_iframe_timer.start(KANA_can_take_damage_from_turret_cooldown)
 
 
 func KANA_add_point() -> void:
@@ -76,3 +92,7 @@ func KANA_add_point() -> void:
 		KANA_last_positions.push_back(global_position)
 
 	emit_signal("KANA_last_position_updated", global_position)
+
+
+func _KANA_on_turret_collided_iframe_timer_timeout() -> void:
+	KANA_can_take_damage_from_turret = true
