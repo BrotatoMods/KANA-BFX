@@ -96,8 +96,9 @@ func _KANA_on_structure_spawned(structure: Structure) -> void:
 	if structure is Turret:
 		# Need to use `push_front` here so new turrets move to the end and not the front.
 		# Not ideal, but the array is not that large. Perhaps there's a better solution.
-		KANA_bfx.state.walking_turrets.turrets.push_front(structure)
-		_player.KANA_update_last_positions_length()
+		if not structure.KANA_is_excluded_from_walking:
+			KANA_bfx.state.walking_turrets.turrets.push_front(structure)
+			_player.KANA_update_last_positions_length()
 
 
 func _KANA_on_wave_timer_timeout() -> void:

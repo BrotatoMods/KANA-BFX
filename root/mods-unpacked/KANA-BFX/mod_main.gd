@@ -24,6 +24,8 @@ var state := {
 var settings := {
 	"walking_turrets": {
 		"show_debug_points": false,
+		# this will exclude all structures with wandering bot effect
+		"exclude_wandering_bot": true
 	},
 }
 

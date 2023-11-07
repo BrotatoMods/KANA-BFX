@@ -5,12 +5,14 @@ var KANA_tween: Tween
 var KANA_just_spawned := true
 var KANA_movement_direction: Vector2
 var KANA_turret_particles: Node
+var KANA_effect_key := ""
+var KANA_is_excluded_from_walking := false
 
 onready var KANA_bfx := get_node("/root/ModLoader/KANA-BFX")
 
 
 func _ready():
-	if RunData.effects["kana_bfx_turret_follow_player"]:
+	if RunData.effects["kana_bfx_turret_follow_player"] and not KANA_is_excluded_from_walking():
 		KANA_add_walking_turret()
 		KANA_tween = Tween.new()
 		add_child(KANA_tween)
@@ -20,6 +22,21 @@ func _ready():
 
 	if RunData.effects["kana_bfx_turret_collide_with_player"]:
 		KANA_setup_collision()
+
+
+func set_data(data: Resource) -> void:
+	.set_data(data)
+	KANA_effect_key = data.key
+
+
+# Ceck if this turret should not walk
+func KANA_is_excluded_from_walking() -> bool:
+	# Check if wandering bot and if wandering bots are excluded
+	if KANA_bfx.settings.walking_turrets.exclude_wandering_bot and KANA_effect_key == "wandering_bot":
+		KANA_is_excluded_from_walking = true
+		return true
+
+	return false
 
 
 func KANA_tween_global_position(to: Vector2):
