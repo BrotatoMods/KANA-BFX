@@ -24,8 +24,10 @@ var state := {
 var settings := {
 	"walking_turrets": {
 		"show_debug_points": false,
-		# this will exclude all structures with wandering bot effect
-		"exclude_wandering_bot": true
+		# This will exclude all structures with wandering bot effect
+		"exclude_wandering_bot": true,
+		# Exclude structures based on there effects text_key.
+		"exclude_effect_text_key": ["effect_garden"]
 	},
 }
 

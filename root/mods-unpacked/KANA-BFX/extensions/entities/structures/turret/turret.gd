@@ -6,6 +6,7 @@ var KANA_just_spawned := true
 var KANA_movement_direction: Vector2
 var KANA_turret_particles: Node
 var KANA_effect_key := ""
+var KANA_effect_text_key := ""
 var KANA_is_excluded_from_walking := false
 
 onready var KANA_bfx := get_node("/root/ModLoader/KANA-BFX")
@@ -27,12 +28,17 @@ func _ready():
 func set_data(data: Resource) -> void:
 	.set_data(data)
 	KANA_effect_key = data.key
+	KANA_effect_text_key = data.text_key
 
 
 # Ceck if this turret should not walk
 func KANA_is_excluded_from_walking() -> bool:
 	# Check if wandering bot and if wandering bots are excluded
 	if KANA_bfx.settings.walking_turrets.exclude_wandering_bot and KANA_effect_key == "wandering_bot":
+		KANA_is_excluded_from_walking = true
+		return true
+
+	if KANA_effect_text_key in KANA_bfx.settings.walking_turrets.exclude_effect_text_key:
 		KANA_is_excluded_from_walking = true
 		return true
 
