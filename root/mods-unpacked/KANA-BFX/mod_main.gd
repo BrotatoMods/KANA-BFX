@@ -2,7 +2,7 @@ extends Node
 
 
 const KANA_BFX_DIR := "KANA-BFX"
-const KANA_BFX_LOG_NAME := "KANA-BFX:Main"
+const KANA_BFX_LOG_NAME := "KANA-BFX:ModMain"
 
 var mod_dir_path := ""
 var extensions_dir_path := ""

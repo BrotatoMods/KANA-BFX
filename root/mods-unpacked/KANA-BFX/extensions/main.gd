@@ -204,3 +204,14 @@ func on_consumable_picked_up(consumable: Node) -> void:
 		if not kana_bfx_gain_temp_stat_for_item_box_collected.empty():
 			for effect in kana_bfx_gain_temp_stat_for_item_box_collected:
 				TempStats.add_stat(effect[0], effect[1])
+
+	if not RunData.effects["kana_bfx_remove_effect_after_consumable_collected"].empty():
+		for effect in RunData.effects["kana_bfx_remove_effect_after_consumable_collected"]:
+			var key: String = effect[0]
+			var value: int = effect[1]
+			var effects_to_remove: Array = effect[2]
+
+			if consumable.consumable_data.my_id == key:
+				for effect_to_remove in effects_to_remove:
+					effect_to_remove.unapply()
+
