@@ -47,6 +47,7 @@ func install_script_extensions() -> void:
 	ModLoaderMod.install_script_extension(extensions_dir_path.plus_file("entities/units/player/player.gd"))
 	ModLoaderMod.install_script_extension(extensions_dir_path.plus_file("entities/structures/turret/turret.gd"))
 	ModLoaderMod.install_script_extension(extensions_dir_path.plus_file("entities/units/movement_behaviors/player_movement_behavior.gd"))
+	ModLoaderMod.install_script_extension(extensions_dir_path.plus_file("singletons/progress_data.gd"))
 
 
 
