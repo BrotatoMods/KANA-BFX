@@ -107,6 +107,7 @@ func _KANA_on_wave_timer_timeout() -> void:
 			var value: int = consumable[1]
 
 			if KANA_bfx.state.spawn_consumable[key].last:
+				_consumables.erase(KANA_bfx.state.spawn_consumable[key].last)
 				KANA_bfx.state.spawn_consumable[key].last.free()
 
 
