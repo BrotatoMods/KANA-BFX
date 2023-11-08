@@ -4,6 +4,7 @@ extends "res://main.gd"
 const KANA_BFX_LOG_NAME_MAIN := "KANA-BFX:Main"
 
 var KANA_timespan_timer : Node
+var KANA_is_wave_over := false
 
 onready var KANA_bfx := get_node("/root/ModLoader/KANA-BFX")
 
@@ -107,6 +108,8 @@ func _KANA_on_structure_spawned(structure: Structure) -> void:
 
 
 func _KANA_on_wave_timer_timeout() -> void:
+	KANA_is_wave_over = true
+
 	if not RunData.effects["kana_bfx_clear_consumable_on_wave_end"].empty():
 		for consumable in RunData.effects["kana_bfx_clear_consumable_on_wave_end"]:
 			var key: String = consumable[0]
@@ -118,11 +121,17 @@ func _KANA_on_wave_timer_timeout() -> void:
 
 
 func _KANA_on_temp_stat_timer_timeout(key: String, value: int, seconds: int) -> void:
+	if KANA_is_wave_over:
+		ModLoaderLog.debug("temp_stat_timer_timeout - Did not remove stat, wave is over.", KANA_BFX_LOG_NAME_MAIN)
+		return
 	TempStats.remove_stat(key, value)
 	ModLoaderLog.debug("Removed stat -> %s new value is -> %s" % [key, str(TempStats.get_stat(key))], KANA_BFX_LOG_NAME_MAIN)
 
 
 func _KANA_on_timespan_timer_timeout(key: String, value: int, seconds: int) -> void:
+	if KANA_is_wave_over:
+		ModLoaderLog.debug("timespan_timer_timeout - Did not remove effect, wave is over.", KANA_BFX_LOG_NAME_MAIN)
+		return
 	RunData.effects[key] = RunData.effects[key] - value
 	ModLoaderLog.debug("Removed effect, new value of %s is -> %s" % [key, str(RunData.effects[key])], KANA_BFX_LOG_NAME_MAIN)
 
@@ -164,8 +173,17 @@ func KANA_create_temp_stat_timer(key: String, value: int, seconds: int) -> void:
 	TempStats.add_stat(key, value)
 	ModLoaderLog.debug("Added stat -> %s with value -> %s" % [key, value], KANA_BFX_LOG_NAME_MAIN)
 	ModLoaderLog.debug("Current stat value of -> %s is -> %s" % [key, str(TempStats.get_stat(key))], KANA_BFX_LOG_NAME_MAIN)
-	var timer := get_tree().create_timer(seconds)
+	var timer := KANA_add_timer(seconds)
 	timer.connect("timeout", self, "_KANA_on_temp_stat_timer_timeout", [key, value, seconds])
+
+
+func KANA_add_timer(seconds: int, is_one_shot := true) -> Timer:
+	var new_timer: Timer = Timer.new()
+	new_timer.one_shot = is_one_shot
+	add_child(new_timer)
+	new_timer.start(seconds)
+
+	return new_timer
 
 
 func on_consumable_picked_up(consumable: Node) -> void:
