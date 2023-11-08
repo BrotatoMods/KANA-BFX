@@ -66,9 +66,14 @@ func KANA_get_random_position_in_zone(offset := 50) -> Vector2:
 func KANA_spawn_consumable(consumable_to_spawn: String, pos: Vector2) -> Node:
 	# Get consumable data
 	var consumable_data: ConsumableData = ItemService.get_element(ItemService.consumables, consumable_to_spawn)
-
 	var KANA_dist := rand_range(50, 100)
-	var KANA_consumable := consumable_scene.instance()
+	var KANA_consumable: Consumable
+
+	if consumable_data is KANABFXConsumableData:
+		KANA_consumable = consumable_data.consumable_scene.instance()
+	else:
+		KANA_consumable = consumable_scene.instance()
+
 	KANA_consumable.consumable_data = consumable_data
 	KANA_consumable.global_position = pos
 	_consumables_container.call_deferred("add_child", KANA_consumable)
