@@ -2,7 +2,7 @@ class_name KANAEffectConsumable
 extends Effect
 
 
-func apply()->void :
+func apply() -> void:
 	if not custom_key == "" or storage_method == StorageMethod.KEY_VALUE:
 		if StorageMethod.REPLACE:
 			if RunData.effects[custom_key].empty():

@@ -4,8 +4,8 @@
 
 [resource]
 script = ExtResource( 1 )
-key = "kana_bfx_consumabel_turrets"
-text_key = "KANA_BFX_CONSUMABEL_TURRETS"
+key = "kana_bfx_consumable_turrets"
+text_key = "KANA_BFX_CONSUMABLE_TURRETS"
 value = 1
 custom_key = ""
 storage_method = 0

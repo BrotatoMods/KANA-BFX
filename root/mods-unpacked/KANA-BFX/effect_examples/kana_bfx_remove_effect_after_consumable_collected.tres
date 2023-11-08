@@ -1,7 +1,7 @@
 [gd_resource type="Resource" load_steps=3 format=2]
 
 [ext_resource path="res://mods-unpacked/KANA-BFX/effect_definitions/effect_remove_effect.gd" type="Script" id=1]
-[ext_resource path="res://mods-unpacked/KANA-BFX/effect_examples/kana_bfx_consumabel_turrets.tres" type="Resource" id=2]
+[ext_resource path="res://mods-unpacked/KANA-BFX/effect_examples/kana_bfx_consumable_turrets.tres" type="Resource" id=2]
 
 [resource]
 script = ExtResource( 1 )
