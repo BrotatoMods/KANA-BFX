@@ -32,7 +32,8 @@ func _KANA_bfx_add_custom_effects(vanilla_effects:Dictionary) -> Dictionary:
 		"kana_bfx_temp_stat_for_time_amount": [],
 		# Currently only on consumable collected
 		"kana_bfx_temp_effect_for_time_amount": [],
-		"kana_bfx_remove_effect_after_consumable_collected": []
+		"kana_bfx_remove_effect_after_consumable_collected": [],
+		"kana_bfx_consumable_not_attract_on_low_health": []
 	}
 
 	return Utils.merge_dictionaries(vanilla_effects, custom_effects)

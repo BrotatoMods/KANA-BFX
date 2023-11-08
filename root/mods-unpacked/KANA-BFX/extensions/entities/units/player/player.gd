@@ -96,3 +96,18 @@ func KANA_add_point() -> void:
 
 func _KANA_on_turret_collided_iframe_timer_timeout() -> void:
 	KANA_can_take_damage_from_turret = true
+
+
+func _on_ItemAttractArea_area_entered(area: Area2D) -> void:
+	._on_ItemAttractArea_area_entered(area)
+	if area is Consumable:
+		var KANA_consumable: Consumable = area
+
+		if not RunData.effects["kana_bfx_consumable_not_attract_on_low_health"].empty():
+			for effect in RunData.effects["kana_bfx_consumable_not_attract_on_low_health"]:
+				var key: String = effect[0]
+				var value: int = effect[1]
+
+				if key == KANA_consumable.consumable_data.my_id:
+					var _kana_last_consumable_in_range: Consumable = consumables_in_range.pop_back()
+					KANA_consumable.attracted_by = null
