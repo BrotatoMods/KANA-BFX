@@ -70,7 +70,10 @@ func KANA_spawn_consumable(consumable_to_spawn: String, pos: Vector2) -> Node:
 	var KANA_dist := rand_range(50, 100)
 	var KANA_consumable: Consumable
 
-	if consumable_data is KANABFXConsumableData:
+#	Can't use a global class here, it is not registered when this script is parsed.
+#	This results in a parse error, breaking the entire extension.
+#	if consumable_data is KANABFXConsumableData:
+	if not consumable_data.get("consumable_scene") == null:
 		KANA_consumable = consumable_data.consumable_scene.instance()
 	else:
 		KANA_consumable = consumable_scene.instance()
