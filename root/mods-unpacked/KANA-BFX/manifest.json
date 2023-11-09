@@ -1,7 +1,7 @@
 {
 	"name": "BFX",
 	"namespace": "KANA",
-	"version_number": "1.1.1",
+	"version_number": "1.2.0",
 	"description": "Library of effects.",
 	"website_url": "https://github.com/BrotatoMods",
 	"dependencies": [

@@ -12,3 +12,4 @@ KANA_BFX_CLEAR_CONSUMABLE_ON_WAVE_END,,
 KANA_BFX_CONSUMABLE_TURRETS,On collecting {0} a turret spawns at this location,Beim aufsallen von {0} spawned ein turret an dieser Position.
 KANA_BFX_TEMP_STAT_FOR_TIME_AMOUNT,Get {0} for {1} seconds,Erhalte {0} für {1} seconds
 KANA_BFX_TEMP_EFFECT_FOR_TIME_AMOUNT,Get {0} for {1} seconds,Erhalte {0} für {1} seconds
+KANA_BFX_SPAWN_ITEM_BOX_ON_KILL,Small chance to drop a Crate when an enemy dies,"Kleine Chance, eine Kiste zu erhalten, wenn ein Gegner stirbt"

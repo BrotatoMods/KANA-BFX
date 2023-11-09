@@ -1,6 +1,8 @@
 extends Node
 
 
+signal consumable_spawn_triggered(id, position)
+
 const KANA_BFX_DIR := "KANA-BFX"
 const KANA_BFX_LOG_NAME := "KANA-BFX:ModMain"
 
@@ -29,6 +31,9 @@ var settings := {
 		# Exclude structures based on there effects text_key.
 		"exclude_effect_text_key": ["effect_garden"]
 	},
+	"item_box_on_kill": {
+		"base_chance": 0.0025, # 0.25%
+	}
 }
 
 
@@ -48,7 +53,7 @@ func install_script_extensions() -> void:
 	ModLoaderMod.install_script_extension(extensions_dir_path.plus_file("entities/structures/turret/turret.gd"))
 	ModLoaderMod.install_script_extension(extensions_dir_path.plus_file("entities/units/movement_behaviors/player_movement_behavior.gd"))
 	ModLoaderMod.install_script_extension(extensions_dir_path.plus_file("singletons/progress_data.gd"))
-
+	ModLoaderMod.install_script_extension(extensions_dir_path.plus_file("entities/units/unit/unit.gd"))
 
 
 func add_translations() -> void:

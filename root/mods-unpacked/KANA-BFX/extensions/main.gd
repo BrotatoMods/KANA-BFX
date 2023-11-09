@@ -31,6 +31,7 @@ func _ready() -> void:
 	KANA_timespan_timer.connect("timeout", self, "_KANA_on_timespan_timer_timeout")
 	_entity_spawner.connect("structure_spawned", self, "_KANA_on_structure_spawned")
 	_wave_timer.connect("timeout", self, "_KANA_on_wave_timer_timeout")
+	KANA_bfx.connect("consumable_spawn_triggered", self, "KANA_spawn_consumable")
 
 	# Clear walking turrets array on wave start
 	KANA_bfx.state.walking_turrets.turrets.clear()
@@ -66,9 +67,16 @@ func KANA_get_random_position_in_zone(offset := 50) -> Vector2:
 # consumable_to_spawn is the my_id of the consumable
 func KANA_spawn_consumable(consumable_to_spawn: String, pos: Vector2) -> Node:
 	# Get consumable data
-	var consumable_data: ConsumableData = ItemService.get_element(ItemService.consumables, consumable_to_spawn)
+	var consumable_data: ConsumableData
 	var KANA_dist := rand_range(50, 100)
 	var KANA_consumable: Consumable
+
+	if consumable_to_spawn == "consumable_item_box":
+		consumable_data = ItemService.item_box
+	elif consumable_to_spawn == "consumable_legendary_item_box":
+		consumable_data = ItemService.legendary_item_box
+	else:
+		consumable_data = ItemService.get_element(ItemService.consumables, consumable_to_spawn)
 
 #	Can't use a global class here, it is not registered when this script is parsed.
 #	This results in a parse error, breaking the entire extension.

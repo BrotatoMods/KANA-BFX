@@ -12,7 +12,7 @@ var KANA_turret_collided_iframe_timer: Timer
 var KANA_can_take_damage_from_turret := true
 var KANA_can_take_damage_from_turret_cooldown := 0.4
 
-onready var KANA_bfx := get_node("/root/ModLoader/KANA-BFX")
+onready var KANA_player_bfx := get_node("/root/ModLoader/KANA-BFX")
 
 
 func _ready() -> void:
@@ -41,7 +41,7 @@ func KANA_add_turret_collided_iframe_timer() -> void:
 
 
 func KANA_update_last_positions_length():
-	KANA_last_positions_length = KANA_bfx.state.walking_turrets.turrets.size() + 1
+	KANA_last_positions_length = KANA_player_bfx.state.walking_turrets.turrets.size() + 1
 
 
 func KANA_create_trailing_points() -> void:
@@ -76,7 +76,7 @@ func KANA_add_point() -> void:
 		return
 
 	# If boost is active wiggle the trail
-	if KANA_bfx.state.walking_turrets.boost_active:
+	if KANA_player_bfx.state.walking_turrets.boost_active:
 		# Depending on the movement direction displace x or y
 		var current_movement_abs = _current_movement.abs()
 
