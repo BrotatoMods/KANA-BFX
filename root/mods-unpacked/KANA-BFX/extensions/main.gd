@@ -97,6 +97,11 @@ func KANA_spawn_consumable(consumable_to_spawn: String, pos: Vector2) -> Node:
 	return KANA_consumable
 
 
+func KANA_spawn_enemy(position: Vector2, type: int, scene: PackedScene, data: Resource = null) -> void:
+	var pos = _entity_spawner.get_spawn_pos_in_area(position, 200)
+	_entity_spawner.queue_to_spawn.push_back([type, scene, pos, data])
+
+
 func _KANA_on_last_position_updated(last_position: Vector2) -> void:
 	for i in KANA_bfx.state.walking_turrets.turrets.size():
 		var turret: Node = KANA_bfx.state.walking_turrets.turrets[i]
@@ -208,45 +213,47 @@ func on_consumable_picked_up(consumable: Node) -> void:
 		var temp_stat := RunData.effects["kana_bfx_temp_stat_for_time_amount"].pop_back() as Array
 		KANA_create_temp_stat_timer(temp_stat[0], temp_stat[1], temp_stat[2])
 
-	if not RunData.effects["kana_bfx_spawn_consumable_random_position"].empty():
-		for consumabel_to_spawn in RunData.effects["kana_bfx_spawn_consumable_random_position"]:
-			var key: String = consumabel_to_spawn[0]
-			var value: int = consumabel_to_spawn[1]
-			if consumable.consumable_data.my_id == key:
-				if not KANA_bfx.state.spawn_consumable.has(key):
-					KANA_bfx.state.spawn_consumable[key] = {}
-				KANA_bfx.state.spawn_consumable[key].last = KANA_spawn_consumable(key, KANA_get_random_position_in_zone())
+	for consumabel_to_spawn in RunData.effects["kana_bfx_spawn_consumable_random_position"]:
+		var key: String = consumabel_to_spawn[0]
+		var value: int = consumabel_to_spawn[1]
+		if consumable.consumable_data.my_id == key:
+			if not KANA_bfx.state.spawn_consumable.has(key):
+				KANA_bfx.state.spawn_consumable[key] = {}
+			KANA_bfx.state.spawn_consumable[key].last = KANA_spawn_consumable(key, KANA_get_random_position_in_zone())
 
-	if not RunData.effects["kana_bfx_consumable_turrets"].empty():
-		for turret_to_spawn in RunData.effects["kana_bfx_consumable_turrets"]:
-			var key: String = turret_to_spawn[0]
-			var value: int = turret_to_spawn[1]
-			if consumable.consumable_data.my_id == key:
-				for i in range(value):
-					var pos = _entity_spawner.get_spawn_pos_in_area(consumable.global_position, 200)
-					_entity_spawner.queue_to_spawn_structures.push_back([EntityType.STRUCTURE, turret_effect.scene, pos, turret_effect])
+	for turret_to_spawn in RunData.effects["kana_bfx_consumable_turrets"]:
+		var key: String = turret_to_spawn[0]
+		var value: int = turret_to_spawn[1]
+		if consumable.consumable_data.my_id == key:
+			for i in range(value):
+				var pos = _entity_spawner.get_spawn_pos_in_area(consumable.global_position, 200)
+				_entity_spawner.queue_to_spawn_structures.push_back([EntityType.STRUCTURE, turret_effect.scene, pos, turret_effect])
 
 	# If a crate got collected
 	if consumable.consumable_data.my_id == "consumable_item_box":
-		var kana_bfx_gain_stat_for_item_box_collected: Array = RunData.effects["kana_bfx_gain_stat_for_item_box_collected"]
-		var kana_bfx_gain_temp_stat_for_item_box_collected: Array = RunData.effects["kana_bfx_gain_temp_stat_for_item_box_collected"]
-
 		# Check if the stat on crate collected effect is active
-		if not kana_bfx_gain_stat_for_item_box_collected.empty():
-			for effect in kana_bfx_gain_stat_for_item_box_collected:
-				RunData.add_stat(effect[0], effect[1])
+		for effect in RunData.effects["kana_bfx_gain_stat_for_item_box_collected"]:
+			RunData.add_stat(effect[0], effect[1])
 
-		if not kana_bfx_gain_temp_stat_for_item_box_collected.empty():
-			for effect in kana_bfx_gain_temp_stat_for_item_box_collected:
-				TempStats.add_stat(effect[0], effect[1])
+		for effect in RunData.effects["kana_bfx_gain_temp_stat_for_item_box_collected"]:
+			TempStats.add_stat(effect[0], effect[1])
 
-	if not RunData.effects["kana_bfx_remove_effect_after_consumable_collected"].empty():
-		for effect in RunData.effects["kana_bfx_remove_effect_after_consumable_collected"]:
-			var key: String = effect[0]
-			var value: int = effect[1]
-			var effects_to_remove: Array = effect[2]
+	for effect in RunData.effects["kana_bfx_spawn_enemy_on_consumable_collected"]:
+		if consumable.consumable_data.my_id == effect.key:
+			KANA_spawn_enemy(consumable.global_position, EntityType.ENEMY, effect.enemy_scene)
 
-			if consumable.consumable_data.my_id == key:
-				for effect_to_remove in effects_to_remove:
-					effect_to_remove.unapply()
+	for effect in RunData.effects["kana_bfx_spawn_projectile_grid_on_consumable_collected"]:
+		if consumable.consumable_data.my_id == effect.key:
+			var projectile_grid_spawner: KANAProjectileGridSpawner = preload("res://mods-unpacked/KANA-BFX/content/scripts/projectile_grid_spawner.gd").new()
+			projectile_grid_spawner.spawn($Projectiles, effect.projectile_scene, effect.projectile_count)
+			projectile_grid_spawner.free()
+
+	for effect in RunData.effects["kana_bfx_remove_effect_after_consumable_collected"]:
+		var key: String = effect[0]
+		var value: int = effect[1]
+		var effects_to_remove: Array = effect[2]
+
+		if consumable.consumable_data.my_id == key:
+			for effect_to_remove in effects_to_remove:
+				effect_to_remove.unapply()
 

@@ -33,12 +33,16 @@ func _KANA_bfx_add_custom_effects(vanilla_effects:Dictionary) -> Dictionary:
 		# Currently only on consumable collected
 		"kana_bfx_temp_effect_for_time_amount": [],
 		"kana_bfx_remove_effect_after_consumable_collected": [],
+		"kana_bfx_spawn_enemy_on_consumable_collected": [],
+		# Currently only works well on the default map size
+		"kana_bfx_spawn_projectile_grid_on_consumable_collected": [],
 		"kana_bfx_consumable_not_attract_on_low_health": [],
 		# Base chance is defined in mod_main settings
 		# The value is the multiplier for this base chance
 		# If this gets too annoying, I might add an effect definition that allows floats
 		# Weapon effect - setup in unit.gd take_damage()
 		"kana_bfx_spawn_item_box_on_kill": 0,
+
 	}
 
 	return Utils.merge_dictionaries(vanilla_effects, custom_effects)
