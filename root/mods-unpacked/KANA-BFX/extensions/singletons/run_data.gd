@@ -36,6 +36,8 @@ func _KANA_bfx_add_custom_effects(vanilla_effects:Dictionary) -> Dictionary:
 		"kana_bfx_spawn_enemy_on_consumable_collected": [],
 		# Currently only works well on the default map size
 		"kana_bfx_spawn_projectile_grid_on_consumable_collected": [],
+		"kana_bfx_spawn_projectile_in_front_of_player_on_consumable_collected": [],
+		"kana_bfx_add_random_effect_on_consumable_collected": [],
 		"kana_bfx_consumable_not_attract_on_low_health": [],
 		# Base chance is defined in mod_main settings
 		# The value is the multiplier for this base chance

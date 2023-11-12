@@ -11,7 +11,15 @@ export (Array, Resource) var effects = []
 export(Array, float, 0.01, 1.00, 0.01) var probabilities = []
 
 
-func apply() -> void:
+func apply()->void :
+	RunData.effects[custom_key].push_back(self)
+
+
+func unapply()->void :
+	RunData.effects[custom_key].erase(self)
+
+
+func apply_random_effect() -> void:
 	var effect: Effect = KANA_pick_random()
 	effect.apply()
 
@@ -25,6 +33,7 @@ func KANA_pick_random() -> Effect:
 
 func KANA_pick_random_index() -> Effect:
 	var random_index := Utils.get_random_int(0, effects.size() - 1)
+	ModLoaderLog.debug("Picked index -> %s" % random_index, KANA_BFX_LOG_NAME_EFFECT_RANDOM_EFFECT)
 	return effects[random_index]
 
 

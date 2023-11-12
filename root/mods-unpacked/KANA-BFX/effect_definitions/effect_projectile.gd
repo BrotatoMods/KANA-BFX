@@ -1,4 +1,4 @@
-class_name KANAEffectProjectileGrid
+class_name KANAEffectProjectile
 extends Effect
 
 export(PackedScene) var projectile_scene

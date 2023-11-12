@@ -4,7 +4,10 @@ extends "res://entities/units/player/player.gd"
 signal KANA_player_border_collided(collider)
 signal KANA_player_turret_collided(collider)
 signal KANA_last_position_updated(last_position)
+signal KANA_forward_point_updated(forward_position)
 
+var KANA_forward_point := Vector2.ZERO
+var KANA_forward_point_offset_to_player := 250
 var KANA_last_positions := []
 var KANA_last_positions_length := 0
 var KANA_wiggle_displacement := 15
@@ -33,6 +36,9 @@ func _physics_process(delta: float) -> void:
 	if RunData.effects["kana_bfx_turret_follow_player"]:
 		KANA_create_trailing_points()
 
+	if not RunData.effects["kana_bfx_spawn_projectile_in_front_of_player_on_consumable_collected"].empty():
+		KANA_create_forward_point()
+
 
 func KANA_add_turret_collided_iframe_timer() -> void:
 	KANA_turret_collided_iframe_timer = Timer.new()
@@ -42,6 +48,14 @@ func KANA_add_turret_collided_iframe_timer() -> void:
 
 func KANA_update_last_positions_length():
 	KANA_last_positions_length = KANA_player_bfx.state.walking_turrets.turrets.size() + 1
+
+
+func KANA_create_forward_point() -> void:
+	if _current_movement == Vector2.ZERO:
+		KANA_forward_point = global_position
+	else:
+		KANA_forward_point = global_position + (_current_movement * KANA_forward_point_offset_to_player)
+	emit_signal("KANA_forward_point_updated", KANA_forward_point)
 
 
 func KANA_create_trailing_points() -> void:

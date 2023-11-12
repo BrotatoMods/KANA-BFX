@@ -5,7 +5,9 @@ const KANA_BFX_LOG_NAME_MAIN := "KANA-BFX:Main"
 
 var KANA_timespan_timer : Node
 var KANA_is_wave_over := false
+var KANA_spawn_projectile_in_front_of_player_queue := []
 
+onready var KANA_projectiles_parent := $Projectiles
 onready var KANA_bfx := get_node("/root/ModLoader/KANA-BFX")
 
 
@@ -28,6 +30,7 @@ func _ready() -> void:
 
 	_player.connect("KANA_player_border_collided", self, "_KANA_on_player_border_collided")
 	_player.connect("KANA_last_position_updated", self, "_KANA_on_last_position_updated")
+	_player.connect("KANA_forward_point_updated", self, "_KANA_on_forward_point_updated")
 	KANA_timespan_timer.connect("timeout", self, "_KANA_on_timespan_timer_timeout")
 	_entity_spawner.connect("structure_spawned", self, "_KANA_on_structure_spawned")
 	_wave_timer.connect("timeout", self, "_KANA_on_wave_timer_timeout")
@@ -100,6 +103,18 @@ func KANA_spawn_consumable(consumable_to_spawn: String, pos: Vector2) -> Node:
 func KANA_spawn_enemy(position: Vector2, type: int, scene: PackedScene, data: Resource = null) -> void:
 	var pos = _entity_spawner.get_spawn_pos_in_area(position, 200)
 	_entity_spawner.queue_to_spawn.push_back([type, scene, pos, data])
+
+
+func KANA_spawn_projectile(position: Vector2, scene: PackedScene) -> void:
+	var new_projectile: Node2D = scene.instance()
+	new_projectile.global_position = position
+	KANA_projectiles_parent.add_child(new_projectile)
+
+
+func _KANA_on_forward_point_updated(forward_point: Vector2) -> void:
+	for effect_projectile in KANA_spawn_projectile_in_front_of_player_queue:
+		KANA_spawn_projectile(forward_point, effect_projectile.projectile_scene)
+		effect_projectile.unapply()
 
 
 func _KANA_on_last_position_updated(last_position: Vector2) -> void:
@@ -205,6 +220,9 @@ func KANA_add_timer(seconds: int, is_one_shot := true) -> Timer:
 func on_consumable_picked_up(consumable: Node) -> void:
 	.on_consumable_picked_up(consumable)
 
+	for effect in RunData.effects["kana_bfx_add_random_effect_on_consumable_collected"]:
+		effect.apply_random_effect()
+
 	if not RunData.effects["kana_bfx_temp_effect_for_time_amount"].empty():
 		var temp_effect := RunData.effects["kana_bfx_temp_effect_for_time_amount"].pop_back() as Array
 		KANA_create_temp_effect_timer(temp_effect[0], temp_effect[1], temp_effect[2])
@@ -245,8 +263,12 @@ func on_consumable_picked_up(consumable: Node) -> void:
 	for effect in RunData.effects["kana_bfx_spawn_projectile_grid_on_consumable_collected"]:
 		if consumable.consumable_data.my_id == effect.key:
 			var projectile_grid_spawner: KANAProjectileGridSpawner = preload("res://mods-unpacked/KANA-BFX/content/scripts/projectile_grid_spawner.gd").new()
-			projectile_grid_spawner.spawn($Projectiles, effect.projectile_scene, effect.projectile_count)
+			projectile_grid_spawner.spawn(KANA_projectiles_parent, effect.projectile_scene, effect.projectile_count)
 			projectile_grid_spawner.free()
+
+	for effect in RunData.effects["kana_bfx_spawn_projectile_in_front_of_player_on_consumable_collected"]:
+		if consumable.consumable_data.my_id == effect.key:
+			KANA_spawn_projectile_in_front_of_player_queue.push_back(effect)
 
 	for effect in RunData.effects["kana_bfx_remove_effect_after_consumable_collected"]:
 		var key: String = effect[0]
