@@ -221,7 +221,8 @@ func on_consumable_picked_up(consumable: Node) -> void:
 	.on_consumable_picked_up(consumable)
 
 	for effect in RunData.effects["kana_bfx_add_random_effect_on_consumable_collected"]:
-		effect.apply_random_effect()
+		if consumable.consumable_data.my_id == effect.key:
+			effect.apply_random_effect()
 
 	if not RunData.effects["kana_bfx_temp_effect_for_time_amount"].empty():
 		var temp_effect := RunData.effects["kana_bfx_temp_effect_for_time_amount"].pop_back() as Array
@@ -271,11 +272,7 @@ func on_consumable_picked_up(consumable: Node) -> void:
 			KANA_spawn_projectile_in_front_of_player_queue.push_back(effect)
 
 	for effect in RunData.effects["kana_bfx_remove_effect_after_consumable_collected"]:
-		var key: String = effect[0]
-		var value: int = effect[1]
-		var effects_to_remove: Array = effect[2]
-
-		if consumable.consumable_data.my_id == key:
-			for effect_to_remove in effects_to_remove:
+		if consumable.consumable_data.my_id == effect.key:
+			for effect_to_remove in effect.effects_to_remove:
 				effect_to_remove.unapply()
 
