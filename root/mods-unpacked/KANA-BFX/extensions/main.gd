@@ -263,7 +263,7 @@ func on_consumable_picked_up(consumable: Node) -> void:
 
 	for effect in RunData.effects["kana_bfx_spawn_projectile_grid_on_consumable_collected"]:
 		if consumable.consumable_data.my_id == effect.key:
-			var projectile_grid_spawner: KANAProjectileGridSpawner = preload("res://mods-unpacked/KANA-BFX/content/scripts/projectile_grid_spawner.gd").new()
+			var projectile_grid_spawner: Object = preload("res://mods-unpacked/KANA-BFX/content/scripts/projectile_grid_spawner.gd").new()
 			projectile_grid_spawner.spawn(KANA_projectiles_parent, effect.projectile_scene, effect.projectile_count)
 			projectile_grid_spawner.free()
 
