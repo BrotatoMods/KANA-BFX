@@ -73,13 +73,17 @@ func spawn_consumables(unit:Unit) -> void:
 	if not _consumables.empty():
 		var last_added_consumable: Consumable = _consumables[-1]
 
+		for effect in RunData.effects["kana_bfx_always_attracted_consumable"]:
+			var key: String = effect[0]
+			if key == last_added_consumable.consumable_data.my_id:
+				last_added_consumable.attracted_by = _player
+
 		for effect in RunData.effects["kana_bfx_replace_consumable"]:
 			var consumable_to_replace: String = effect.key
 			if last_added_consumable.consumable_data.my_id == consumable_to_replace:
 				_consumables_container.call_deferred("remove_child", last_added_consumable)
 				_consumables.erase(last_added_consumable)
 				KANA_spawn_consumable(effect.resource.my_id, unit.global_position)
-
 
 
 # consumable_to_spawn is the my_id of the consumable
@@ -111,6 +115,12 @@ func KANA_spawn_consumable(consumable_to_spawn: String, pos: Vector2) -> Node:
 
 	KANA_consumable.consumable_data = consumable_data
 	KANA_consumable.global_position = pos
+
+	for effect in RunData.effects["kana_bfx_always_attracted_consumable"]:
+		var key: String = effect[0]
+		if key == consumable_data.my_id:
+			KANA_consumable.attracted_by = _player
+
 	_consumables_container.call_deferred("add_child", KANA_consumable)
 	KANA_consumable.call_deferred("set_texture", consumable_data.icon)
 	var _error := KANA_consumable.connect("picked_up", self, "on_consumable_picked_up")

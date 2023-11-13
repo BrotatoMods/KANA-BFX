@@ -45,6 +45,7 @@ func _KANA_bfx_add_custom_effects(vanilla_effects:Dictionary) -> Dictionary:
 		# Weapon effect - setup in unit.gd take_damage()
 		"kana_bfx_spawn_item_box_on_kill": 0,
 		"kana_bfx_replace_consumable": [],
+		"kana_bfx_always_attracted_consumable": []
 
 	}
 
