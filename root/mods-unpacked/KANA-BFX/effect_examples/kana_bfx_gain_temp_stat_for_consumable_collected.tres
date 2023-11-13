@@ -1,0 +1,16 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://mods-unpacked/KANA-BFX/effect_definitions/effect_more_data.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+key = "stat_percent_damage"
+text_key = "KANA_BFX_GAIN_TEMP_STAT_FOR_CONSUMABLE_COLLECTED"
+value = 3
+custom_key = "kana_bfx_gain_temp_stat_for_consumable_collected"
+storage_method = 0
+effect_sign = 3
+custom_args = [  ]
+data = {
+"consumable_id": "consumable_item_box"
+}

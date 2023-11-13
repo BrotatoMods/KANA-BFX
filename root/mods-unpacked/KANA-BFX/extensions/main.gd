@@ -280,14 +280,13 @@ func on_consumable_picked_up(consumable: Node) -> void:
 				var pos = _entity_spawner.get_spawn_pos_in_area(consumable.global_position, 200)
 				_entity_spawner.queue_to_spawn_structures.push_back([EntityType.STRUCTURE, turret_effect.scene, pos, turret_effect])
 
-	# If a crate got collected
-	if consumable.consumable_data.my_id == "consumable_item_box":
-		# Check if the stat on crate collected effect is active
-		for effect in RunData.effects["kana_bfx_gain_stat_for_item_box_collected"]:
-			RunData.add_stat(effect[0], effect[1])
+	for effect in RunData.effects["kana_bfx_gain_stat_for_consumable_collected"]:
+		if effect.data.consumable_id == consumable.consumable_data.my_id:
+			RunData.add_stat(effect.key, effect.value)
 
-		for effect in RunData.effects["kana_bfx_gain_temp_stat_for_item_box_collected"]:
-			TempStats.add_stat(effect[0], effect[1])
+	for effect in RunData.effects["kana_bfx_gain_temp_stat_for_consumable_collected"]:
+		if effect.data.consumable_id == consumable.consumable_data.my_id:
+			RunData.add_stat(effect.key, effect.value)
 
 	for effect in RunData.effects["kana_bfx_spawn_enemy_on_consumable_collected"]:
 		if consumable.consumable_data.my_id == effect.key:

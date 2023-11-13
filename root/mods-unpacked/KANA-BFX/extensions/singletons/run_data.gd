@@ -17,8 +17,8 @@ func _KANA_bfx_add_custom_effects(vanilla_effects:Dictionary) -> Dictionary:
 	ModLoaderLog.info("Adding custom effects", KANA_BFX_RUN_DATA_LOG_NAME)
 
 	var custom_effects := {
-		"kana_bfx_gain_stat_for_item_box_collected": [],
-		"kana_bfx_gain_temp_stat_for_item_box_collected": [],
+		"kana_bfx_gain_stat_for_consumable_collected": [],
+		"kana_bfx_gain_temp_stat_for_consumable_collected": [],
 		"kana_bfx_port_to_opposite_side": 0,
 		"kana_bfx_take_damage_on_turret_collision": 0,
 		"kana_bfx_turret_follow_player": 0,
