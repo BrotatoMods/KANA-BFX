@@ -1,0 +1,13 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://mods-unpacked/KANA-BFX/effect_definitions/effect_resource_ref.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+key = "my_id_of_consumable_to_replace"
+text_key = ""
+value = 0
+custom_key = "kana_bfx_replace_consumable"
+storage_method = 2
+effect_sign = 2
+custom_args = [  ]

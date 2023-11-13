@@ -67,6 +67,21 @@ func KANA_get_random_position_in_zone(offset := 50) -> Vector2:
 	return random_pos
 
 
+func spawn_consumables(unit:Unit) -> void:
+	.spawn_consumables(unit)
+
+	if not _consumables.empty():
+		var last_added_consumable: Consumable = _consumables[-1]
+
+		for effect in RunData.effects["kana_bfx_replace_consumable"]:
+			var consumable_to_replace: String = effect.key
+			if last_added_consumable.consumable_data.my_id == consumable_to_replace:
+				_consumables_container.call_deferred("remove_child", last_added_consumable)
+				_consumables.erase(last_added_consumable)
+				KANA_spawn_consumable(effect.resource.my_id, unit.global_position)
+
+
+
 # consumable_to_spawn is the my_id of the consumable
 func KANA_spawn_consumable(consumable_to_spawn: String, pos: Vector2) -> Node:
 	# Get consumable data
@@ -80,6 +95,11 @@ func KANA_spawn_consumable(consumable_to_spawn: String, pos: Vector2) -> Node:
 		consumable_data = ItemService.legendary_item_box
 	else:
 		consumable_data = ItemService.get_element(ItemService.consumables, consumable_to_spawn)
+
+	for effect in RunData.effects["kana_bfx_replace_consumable"]:
+		var consumable_to_replace: String = effect.key
+		if consumable_to_spawn == consumable_to_replace:
+			consumable_data = effect.resource
 
 #	Can't use a global class here, it is not registered when this script is parsed.
 #	This results in a parse error, breaking the entire extension.
