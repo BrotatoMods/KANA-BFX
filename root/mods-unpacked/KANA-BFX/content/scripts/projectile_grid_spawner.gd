@@ -20,4 +20,4 @@ func spawn(parent_projectile_node: Node, projectile_scene: PackedScene = pillar_
 	for random_position in random_positions:
 		var new_projectile: Node2D = projectile_scene.instance()
 		new_projectile.global_position = random_position
-		parent_projectile_node.add_child(new_projectile)
+		parent_projectile_node.call_deferred("add_child", new_projectile)
