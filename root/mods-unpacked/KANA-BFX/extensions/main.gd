@@ -121,14 +121,16 @@ func KANA_spawn_consumable(consumable_to_spawn: String, pos: Vector2) -> Node:
 
 
 func KANA_spawn_enemy(position: Vector2, type: int, scene: PackedScene, data: Resource = null) -> void:
-	var pos = _entity_spawner.get_spawn_pos_in_area(position, 200)
-	_entity_spawner.queue_to_spawn.push_back([type, scene, pos, data])
+	if not KANA_is_wave_over:
+		var pos = _entity_spawner.get_spawn_pos_in_area(position, 200)
+		_entity_spawner.queue_to_spawn.push_back([type, scene, pos, data])
 
 
 func KANA_spawn_projectile(position: Vector2, scene: PackedScene) -> void:
-	var new_projectile: Node2D = scene.instance()
-	new_projectile.global_position = position
-	KANA_projectiles_parent.add_child(new_projectile)
+	if not KANA_is_wave_over:
+		var new_projectile: Node2D = scene.instance()
+		new_projectile.global_position = position
+		KANA_projectiles_parent.add_child(new_projectile)
 
 
 func _KANA_on_forward_point_updated(forward_point: Vector2) -> void:
@@ -282,7 +284,7 @@ func on_consumable_picked_up(consumable: Node) -> void:
 			KANA_spawn_enemy(consumable.global_position, EntityType.ENEMY, effect.enemy_scene)
 
 	for effect in RunData.effects["kana_bfx_spawn_projectile_grid_on_consumable_collected"]:
-		if consumable.consumable_data.my_id == effect.key:
+		if consumable.consumable_data.my_id == effect.key and not KANA_is_wave_over:
 			var projectile_grid_spawner: Object = load("res://mods-unpacked/KANA-BFX/content/scripts/projectile_grid_spawner.gd").new()
 			projectile_grid_spawner.spawn(KANA_projectiles_parent, effect.projectile_scene, effect.projectile_count)
 			projectile_grid_spawner.free()
