@@ -8,11 +8,12 @@ var KANA_turret_particles: Node
 var KANA_effect_key := ""
 var KANA_effect_text_key := ""
 var KANA_is_excluded_from_walking := false
+var KANA_previous_position: Vector2
 
 onready var KANA_bfx := get_node("/root/ModLoader/KANA-BFX")
 
 
-func _ready():
+func _ready() -> void:
 	if RunData.effects["kana_bfx_turret_follow_player"] and not KANA_is_excluded_from_walking():
 		KANA_add_walking_turret()
 		KANA_tween = Tween.new()
@@ -23,6 +24,18 @@ func _ready():
 
 	if RunData.effects["kana_bfx_turret_collide_with_player"]:
 		KANA_setup_collision()
+
+
+func _physics_process(delta: float) -> void:
+	if cleaning_up or _is_shooting:
+		return
+
+	if KANA_previous_position == global_position:
+		_animation_player.play("idle")
+	else:
+		_animation_player.play("move")
+
+	KANA_previous_position = global_position
 
 
 func set_data(data: Resource) -> void:
@@ -105,7 +118,7 @@ func KANA_add_walking_turret() -> void:
 		_animation_player.add_animation('death', turret_death_animation)
 
 
-func KANA_update_animation(movement:Vector2)-> void:
+func KANA_update_animation(movement: Vector2) -> void:
 		if movement.x > 0:
 			sprite.scale.x = abs(sprite.scale.x)
 		elif movement.x < 0:

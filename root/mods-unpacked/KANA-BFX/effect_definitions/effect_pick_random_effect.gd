@@ -2,13 +2,14 @@ class_name KANAEffectPickRandomEffect
 extends Effect
 
 
-# TODOS:
-# - Add custom get_text
-
 const KANA_BFX_LOG_NAME_EFFECT_RANDOM_EFFECT := "KANA-BFX:EffectPickRandomEffect"
 
 export (Array, Resource) var effects = []
 export(Array, float, 0.01, 1.00, 0.01) var probabilities = []
+
+
+static func get_id()->String:
+	return "kana_bfx_effect_pick_random_effect"
 
 
 func apply()->void :
@@ -63,3 +64,38 @@ func KANA_pick_random_with_probabilities() -> Effect:
 	ModLoaderLog.debug("Random value is -> %s" % random_value, KANA_BFX_LOG_NAME_EFFECT_RANDOM_EFFECT)
 
 	return selected_effect
+
+
+func get_args() -> Array:
+	var text_random_effects := [""]
+
+	for effect in effects:
+		text_random_effects.push_back(effect.get_text())
+
+	return [tr(key.to_upper()), "\n - ".join(text_random_effects)]
+
+
+func serialize() -> Dictionary:
+	var serialized = .serialize()
+	serialized.effects = []
+	serialized.probabilities = probabilities
+
+	for effect in effects:
+		serialized.effects.push_back(effect.serialize())
+
+	return serialized
+
+
+func deserialize_and_merge(serialized: Dictionary) -> void:
+	.deserialize_and_merge(serialized)
+
+	for serialized_effect in serialized.effects:
+		for effect in ItemService.effects:
+			if effect.get_id() == serialized_effect.effect_id:
+				var new_effect = effect.new()
+				new_effect.deserialize_and_merge(serialized_effect)
+				effects.push_back(new_effect)
+				break
+
+	probabilities = serialized.probabilities
+

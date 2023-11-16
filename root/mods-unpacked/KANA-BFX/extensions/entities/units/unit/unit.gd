@@ -12,6 +12,6 @@ func take_damage(value:int, hitbox:Hitbox = null, dodgeable:bool = true, armor_a
 		for effect in hitbox.effects:
 			if effect.key == "kana_bfx_spawn_item_box_on_kill":
 				if randf() <= KANA_drop_item_box_on_kill_base_chance * RunData.effects["kana_bfx_spawn_item_box_on_kill"]:
-					KANA_bfx.emit_signal("consumable_spawn_triggered", "consumable_item_box", global_position)
+					KANA_bfx.emit_signal("consumable_spawn_triggered", "consumable_item_box", global_position, hitbox.from)
 
 	return damage_data

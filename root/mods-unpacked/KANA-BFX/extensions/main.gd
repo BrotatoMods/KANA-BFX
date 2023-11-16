@@ -34,7 +34,7 @@ func _ready() -> void:
 	KANA_timespan_timer.connect("timeout", self, "_KANA_on_timespan_timer_timeout")
 	_entity_spawner.connect("structure_spawned", self, "_KANA_on_structure_spawned")
 	_wave_timer.connect("timeout", self, "_KANA_on_wave_timer_timeout")
-	KANA_bfx.connect("consumable_spawn_triggered", self, "KANA_spawn_consumable")
+	KANA_bfx.connect("consumable_spawn_triggered", self, "_KANA_on_consumable_spawn_triggered")
 
 	# Clear walking turrets array on wave start
 	KANA_bfx.state.walking_turrets.turrets.clear()
@@ -141,6 +141,10 @@ func KANA_spawn_projectile(position: Vector2, scene: PackedScene) -> void:
 		var new_projectile: Node2D = scene.instance()
 		new_projectile.global_position = position
 		KANA_projectiles_parent.add_child(new_projectile)
+
+
+func _KANA_on_consumable_spawn_triggered(id: String, position: Vector2, triggered_by: Object) -> void:
+	KANA_spawn_consumable(id, position)
 
 
 func _KANA_on_forward_point_updated(forward_point: Vector2) -> void:
@@ -286,7 +290,7 @@ func on_consumable_picked_up(consumable: Node) -> void:
 
 	for effect in RunData.effects["kana_bfx_gain_temp_stat_for_consumable_collected"]:
 		if effect.data.consumable_id == consumable.consumable_data.my_id:
-			RunData.add_stat(effect.key, effect.value)
+			TempStats.add_stat(effect.key, effect.value)
 
 	for effect in RunData.effects["kana_bfx_spawn_enemy_on_consumable_collected"]:
 		if consumable.consumable_data.my_id == effect.key:
@@ -305,5 +309,8 @@ func on_consumable_picked_up(consumable: Node) -> void:
 	for effect in RunData.effects["kana_bfx_remove_effect_after_consumable_collected"]:
 		if consumable.consumable_data.my_id == effect.key:
 			for effect_to_remove in effect.effects_to_remove:
-				effect_to_remove.unapply()
+				if effect.remove_all_effects_with_this_custom_key:
+					RunData.effects[effect_to_remove.custom_key].clear()
+				else:
+					effect_to_remove.unapply()
 
