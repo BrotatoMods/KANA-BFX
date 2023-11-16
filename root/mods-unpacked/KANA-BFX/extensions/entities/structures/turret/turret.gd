@@ -27,7 +27,12 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	if cleaning_up or _is_shooting:
+	if (
+		cleaning_up or
+		_is_shooting or
+		KANA_is_excluded_from_walking() or
+		not RunData.effects["kana_bfx_turret_follow_player"]
+	):
 		return
 
 	if KANA_previous_position == global_position:
