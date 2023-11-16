@@ -13,7 +13,8 @@ static func get_id()->String:
 
 
 func apply()->void :
-	RunData.effects[custom_key].push_back(self)
+	if not RunData.effects[custom_key].has(self):
+		RunData.effects[custom_key].push_back(self)
 
 
 func unapply()->void :
@@ -81,6 +82,9 @@ func serialize() -> Dictionary:
 	serialized.probabilities = probabilities
 
 	for effect in effects:
+		# Skip if it is the same effect to prevent an infinite loop.
+		if effect.get_id() == get_id():
+			continue
 		serialized.effects.push_back(effect.serialize())
 
 	return serialized
