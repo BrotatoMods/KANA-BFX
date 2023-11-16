@@ -132,4 +132,6 @@ func KANA_update_animation(movement: Vector2) -> void:
 
 func _on_AnimationPlayer_animation_finished(anim_name: String) -> void:
 	._on_AnimationPlayer_animation_finished(anim_name)
-	_animation_player.play("move")
+
+	if RunData.effects["kana_bfx_turret_follow_player"] and not KANA_is_excluded_from_walking():
+		_animation_player.play("move")

@@ -64,7 +64,6 @@ func _KANA_bfx_add_custom_effects(vanilla_effects:Dictionary) -> Dictionary:
 		"kana_bfx_spawn_item_box_on_kill": 0,
 		"kana_bfx_replace_consumable": [],
 		"kana_bfx_always_attracted_consumable": []
-
 	}
 
 	return Utils.merge_dictionaries(vanilla_effects, custom_effects)
