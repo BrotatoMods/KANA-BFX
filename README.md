@@ -10,6 +10,8 @@
 
 - Includes all Effects from [Pototo](https://steamcommunity.com/sharedfiles/filedetails/?id=3082201639)
 
+*Let me know if anyone is interested in using this for their own mod. I'm happy to provide documentation on how to use them if there is interest :)*
+
 [Workshop Link](https://steamcommunity.com/sharedfiles/filedetails/?id=3005457980) 
 
 <br/>
