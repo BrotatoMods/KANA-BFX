@@ -7,7 +7,7 @@ signal KANA_last_position_updated(last_position)
 signal KANA_forward_point_updated(forward_position)
 
 var KANA_forward_point := Vector2.ZERO
-var KANA_forward_point_offset_to_player := 250
+var KANA_forward_point_offset_to_player := 350
 var KANA_last_positions := []
 var KANA_last_positions_length := 0
 var KANA_wiggle_displacement := 15
