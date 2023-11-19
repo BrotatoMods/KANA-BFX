@@ -22,7 +22,7 @@ func _ready() -> void:
 		# if I call it inside KANA_add_walking_turret the animation doesn't play.
 		_animation_player.play("move")
 
-	if RunData.effects["kana_bfx_turret_collide_with_player"]:
+	if RunData.effects["kana_bfx_turret_collide_with_player"] and not KANA_is_excluded_from_walking():
 		KANA_setup_collision()
 
 
