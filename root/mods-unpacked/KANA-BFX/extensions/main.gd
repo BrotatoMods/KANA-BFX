@@ -58,7 +58,7 @@ func KANA_add_timespan_timer() -> void:
 	.add_child(KANA_timespan_timer)
 
 
-func KANA_get_random_position_in_zone(offset := 50) -> Vector2:
+func KANA_get_random_position_in_zone(offset := 100) -> Vector2:
 	var random_pos := Vector2(
 			rand_range(ZoneService.current_zone_min_position.x + offset, ZoneService.current_zone_max_position.x - offset),
 			rand_range(ZoneService.current_zone_min_position.y + offset, ZoneService.current_zone_max_position.y - offset)
