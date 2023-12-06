@@ -82,8 +82,10 @@ func KANA_tween_global_position(to: Vector2):
 			KANA_just_spawned = false
 
 
-func KANA_setup_collision():
-	collision_layer = 8
+func KANA_setup_collision() -> void:
+	mode = RigidBody2D.MODE_STATIC
+
+	collision_layer = 128
 	collision_mask = 2
 
 

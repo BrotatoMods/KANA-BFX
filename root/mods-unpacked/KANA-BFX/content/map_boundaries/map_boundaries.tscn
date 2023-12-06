@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://mods-unpacked/KANA-BFX/content/map_boundaries/map_boundaries.gd" type="Script" id=1]
+
+[node name="KANA_Map_Boundaries" type="Area2D"]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource( 1 )

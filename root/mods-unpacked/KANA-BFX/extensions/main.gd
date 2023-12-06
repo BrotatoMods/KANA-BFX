@@ -3,7 +3,8 @@ extends "res://main.gd"
 
 const KANA_BFX_LOG_NAME_MAIN := "KANA-BFX:Main"
 
-var KANA_timespan_timer : Node
+var KANA_map_boundaries: Area2D
+var KANA_timespan_timer: Node
 var KANA_is_wave_over := false
 var KANA_spawn_projectile_in_front_of_player_queue := []
 
@@ -19,6 +20,7 @@ func _ready() -> void:
 		add_child(KANA_bfx.walking_turrets_debug_points, true)
 
 	KANA_add_timespan_timer()
+	KANA_add_map_boundaries()
 
 	if not RunData.effects["kana_bfx_spawn_consumable_random_position"].empty():
 		for consumabel_to_spawn in RunData.effects["kana_bfx_spawn_consumable_random_position"]:
@@ -28,13 +30,13 @@ func _ready() -> void:
 				KANA_bfx.state.spawn_consumable[key] = {}
 			KANA_bfx.state.spawn_consumable[key].last = KANA_spawn_consumable(key, KANA_get_random_position_in_zone())
 
-	_player.connect("KANA_player_border_collided", self, "_KANA_on_player_border_collided")
 	_player.connect("KANA_last_position_updated", self, "_KANA_on_last_position_updated")
 	_player.connect("KANA_forward_point_updated", self, "_KANA_on_forward_point_updated")
 	KANA_timespan_timer.connect("timeout", self, "_KANA_on_timespan_timer_timeout")
 	_entity_spawner.connect("structure_spawned", self, "_KANA_on_structure_spawned")
 	_wave_timer.connect("timeout", self, "_KANA_on_wave_timer_timeout")
 	KANA_bfx.connect("consumable_spawn_triggered", self, "_KANA_on_consumable_spawn_triggered")
+	KANA_map_boundaries.connect("body_entered", self, "_KANA_on_player_border_collided")
 
 	# Clear walking turrets array on wave start
 	KANA_bfx.state.walking_turrets.turrets.clear()
@@ -51,6 +53,14 @@ func KANA_draw_debug_points() -> void:
 		var new_debug_point : Node2D = KANA_bfx.walking_turrets_debug_point.instance()
 		KANA_bfx.walking_turrets_debug_points.add_child(new_debug_point)
 		new_debug_point.global_position = position
+
+
+func KANA_add_map_boundaries() -> void:
+	var current_zone = ZoneService.get_zone_data(RunData.current_zone).duplicate()
+
+	KANA_map_boundaries = preload("res://mods-unpacked/KANA-BFX/content/map_boundaries/map_boundaries.tscn").instance()
+	.add_child(KANA_map_boundaries)
+	KANA_map_boundaries.init(current_zone)
 
 
 func KANA_add_timespan_timer() -> void:
@@ -220,12 +230,9 @@ func KANA_get_opposite_collision_tile_position(position: Vector2, direction: Vec
 	return opposite_position
 
 
-func _KANA_on_player_border_collided(collision: KinematicCollision2D) -> void:
+func _KANA_on_player_border_collided(player: Player) -> void:
 	if RunData.effects["kana_bfx_port_to_opposite_side"]:
-		var tile_position_player: Vector2 = collision.collider.world_to_map(_player.position)
-		var tile_position_collider: Vector2 = tile_position_player - collision.normal
-
-		var opposite_position := KANA_get_opposite_collision_tile_position(collision.position, collision.normal)
+		var opposite_position := KANA_get_opposite_collision_tile_position(player.global_position, player._current_movement * -1)
 
 		_player.global_position = opposite_position
 
@@ -313,4 +320,3 @@ func on_consumable_picked_up(consumable: Node) -> void:
 					RunData.effects[effect_to_remove.custom_key].clear()
 				else:
 					effect_to_remove.unapply()
-

@@ -19,25 +19,30 @@ onready var KANA_player_bfx := get_node("/root/ModLoader/KANA-BFX")
 
 
 func _ready() -> void:
+	KANA_rigid_body_setup()
 	KANA_add_turret_collided_iframe_timer()
 	KANA_update_last_positions_length()
 
+	connect('body_entered', self, "_KANA_on_body_entered")
 	connect("KANA_player_turret_collided", self, "_KANA_on_player_turret_collided")
 	KANA_turret_collided_iframe_timer.connect("timeout", self, "_KANA_on_turret_collided_iframe_timer_timeout")
 
 
 func _physics_process(delta: float) -> void:
-	var collision := get_last_slide_collision()
-	if collision and collision.collider is MyTileMapLimits:
-		emit_signal("KANA_player_border_collided", collision)
-	if collision and collision.collider is Turret:
-		emit_signal("KANA_player_turret_collided", collision)
-
 	if RunData.effects["kana_bfx_turret_follow_player"]:
 		KANA_create_trailing_points()
 
 	if not RunData.effects["kana_bfx_spawn_projectile_in_front_of_player_on_consumable_collected"].empty():
 		KANA_create_forward_point()
+
+
+func KANA_rigid_body_setup() -> void:
+	if (
+		RunData.effects.has("kana_bfx_turret_collide_with_player") and RunData.effects.kana_bfx_turret_collide_with_player == 1 or
+		RunData.effects.has("kana_bfx_port_to_opposite_side") and RunData.effects.kana_bfx_port_to_opposite_side == 1
+	):
+		contact_monitor = true
+		contacts_reported = 5
 
 
 func KANA_add_turret_collided_iframe_timer() -> void:
@@ -66,7 +71,12 @@ func KANA_create_trailing_points() -> void:
 		KANA_add_point()
 
 
-func _KANA_on_player_turret_collided(collision: KinematicCollision2D) -> void:
+func _KANA_on_body_entered(body: Node) -> void:
+	if body is Turret:
+		emit_signal("KANA_player_turret_collided", body)
+
+
+func _KANA_on_player_turret_collided(turret: Turret) -> void:
 	if RunData.effects["kana_bfx_take_damage_on_turret_collision"] == 1:
 		if KANA_can_take_damage_from_turret:
 			var damage_base := 1
