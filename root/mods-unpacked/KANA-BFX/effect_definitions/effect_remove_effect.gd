@@ -8,16 +8,39 @@ export(bool) var show_effect_text := true
 
 
 
-static func get_id()->String:
+static func get_id() -> String:
 	return "kana_bfx_effect_remove_effect"
 
 
-func apply()->void :
-	if not RunData.effects[custom_key].has(self):
+# Check if an effect with the same properties already exists.
+func same_exists() -> bool:
+	var keys: Array
+	var custom_keys: Array
+
+	for effect in effects_to_remove:
+		keys.push_back(effect.key)
+		custom_keys.push_back(effect.custom_key)
+
+	for effect in RunData.effects[custom_key]:
+		var current_keys: Array
+		var current_custom_keys: Array
+
+		for effect_to_remove in effect.effects_to_remove:
+			current_keys.push_back(effect_to_remove.key)
+			current_custom_keys.push_back(effect_to_remove.custom_key)
+
+		if keys == current_keys and custom_keys == current_custom_keys:
+			return true
+
+	return false
+
+
+func apply()-> void:
+	if not RunData.effects[custom_key].has(self) and not same_exists():
 		RunData.effects[custom_key].push_back(self)
 
 
-func unapply()->void :
+func unapply() -> void:
 	RunData.effects[custom_key].erase(self)
 
 
