@@ -6,6 +6,8 @@ signal KANA_player_turret_collided(collider)
 signal KANA_last_position_updated(last_position)
 signal KANA_forward_point_updated(forward_position)
 
+var KANA_is_rigid_body_setup := false
+
 var KANA_forward_point := Vector2.ZERO
 var KANA_forward_point_offset_to_player := 350
 var KANA_last_positions := []
@@ -23,12 +25,16 @@ func _ready() -> void:
 	KANA_add_turret_collided_iframe_timer()
 	KANA_update_last_positions_length()
 
-	connect('body_entered', self, "_KANA_on_body_entered")
 	connect("KANA_player_turret_collided", self, "_KANA_on_player_turret_collided")
 	KANA_turret_collided_iframe_timer.connect("timeout", self, "_KANA_on_turret_collided_iframe_timer_timeout")
 
 
 func _physics_process(delta: float) -> void:
+	for body in get_colliding_bodies():
+		if body is Turret:
+			emit_signal("KANA_player_turret_collided", body)
+
+
 	if RunData.effects["kana_bfx_turret_follow_player"]:
 		KANA_create_trailing_points()
 
@@ -41,8 +47,11 @@ func KANA_rigid_body_setup() -> void:
 		RunData.effects.has("kana_bfx_turret_collide_with_player") and RunData.effects.kana_bfx_turret_collide_with_player == 1 or
 		RunData.effects.has("kana_bfx_port_to_opposite_side") and RunData.effects.kana_bfx_port_to_opposite_side == 1
 	):
+		continuous_cd = RigidBody2D.CCD_MODE_CAST_SHAPE
 		contact_monitor = true
 		contacts_reported = 5
+
+		KANA_is_rigid_body_setup = true
 
 
 func KANA_add_turret_collided_iframe_timer() -> void:
@@ -69,11 +78,6 @@ func KANA_create_trailing_points() -> void:
 	else:
 		KANA_last_positions.pop_front()
 		KANA_add_point()
-
-
-func _KANA_on_body_entered(body: Node) -> void:
-	if body is Turret:
-		emit_signal("KANA_player_turret_collided", body)
 
 
 func _KANA_on_player_turret_collided(turret: Turret) -> void:

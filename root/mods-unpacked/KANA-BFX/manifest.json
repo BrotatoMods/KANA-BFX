@@ -1,7 +1,7 @@
 {
 	"name": "BFX",
 	"namespace": "KANA",
-	"version_number": "1.5.1",
+	"version_number": "1.5.4",
 	"description": "Library of effects.\n\nIncludes all effects used by [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3082201639]Pototo[/url].",
 	"website_url": "https://github.com/BrotatoMods",
 	"dependencies": [
